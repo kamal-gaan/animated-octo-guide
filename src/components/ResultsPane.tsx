@@ -1,5 +1,5 @@
 // src/components/ResultsPane.tsx
-import type { Summary } from '../types';
+import type { Summary, PreviewItem } from '../types';
 import { getTypeClass } from '../utils/jsonHelpers';
 
 interface ResultsPaneProps {
@@ -7,7 +7,7 @@ interface ResultsPaneProps {
   path: string[];
   onBreadcrumbClick: (index: number) => void;
   onCardClick: (key: string) => void;
-  hasData: boolean; // simple check to show placeholder vs content
+  hasData: boolean;
 }
 
 export const ResultsPane = ({ summary, path, onBreadcrumbClick, onCardClick, hasData }: ResultsPaneProps) => {
@@ -22,40 +22,67 @@ export const ResultsPane = ({ summary, path, onBreadcrumbClick, onCardClick, has
     );
   }
 
+  // Helper moved inside or outside to handle logic
+  const handleCardInteraction = (item: PreviewItem) => {
+    if (item.isExpandable) {
+      onCardClick(item.key);
+    }
+  };
+
   return (
     <div className="output-pane">
-      <div className="results-section">
-        <div className="breadcrumb-bar">
-          {path.map((item, index) => (
-            <span key={index} className="breadcrumb-item">
-              <span className="breadcrumb-link" onClick={() => onBreadcrumbClick(index)}>
-                {item}
-              </span>
-              {index < path.length - 1 && <span className="breadcrumb-separator">/</span>}
-            </span>
-          ))}
-        </div>
-
-        <div className="results-header">
-          <h3>{summary.type} Overview</h3>
-          <span className="item-count">{summary.count} items</span>
-        </div>
-
-        <div className="results-grid">
-          {summary.preview.map((item, index) => (
-            <div
-              key={index}
-              className={`result-card ${item.isExpandable ? 'clickable' : ''}`}
-              onClick={() => onCardClick(item.key)}
+      <div className="breadcrumb-bar">
+        {path.map((item, index) => (
+          <div key={index} className="breadcrumb-pill-wrapper">
+            <button
+              className="breadcrumb-pill"
+              onClick={() => onBreadcrumbClick(index)}
+              title={`Back to ${item}`}
             >
+              {item}
+            </button>
+            {index < path.length - 1 && (
+              <span className="breadcrumb-arrow">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+              </span>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="results-header">
+        <h3>{summary.type} Overview</h3>
+        <span className="item-count">{summary.count} properties</span>
+      </div>
+
+      <div className="results-grid">
+        {summary.preview.map((item, index) => (
+          <div
+            key={index}
+            className={`result-card ${item.isExpandable ? 'clickable' : ''}`}
+            onClick={() => handleCardInteraction(item)}
+          >
+            <div className="card-top">
               <span className="result-key">{item.key}</span>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span className={`type-badge ${getTypeClass(item.type)}`}>{item.type}</span>
-                {item.isExpandable && <span style={{ color: '#666', fontSize: '12px' }}>▶</span>}
-              </div>
+              {item.isExpandable && <span className="expand-icon">▶</span>}
             </div>
-          ))}
-        </div>
+
+            {/* Display value for non-expandable items */}
+            {!item.isExpandable && item.value !== undefined && (
+              <div className="value-preview">
+                {item.value}
+              </div>
+            )}
+
+            <div className="card-bottom">
+              <span className={`type-badge ${getTypeClass(item.type)}`}>
+                {item.type}
+              </span>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

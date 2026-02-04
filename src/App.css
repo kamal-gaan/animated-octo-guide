@@ -1,11 +1,36 @@
-/* Reset root to fill screen */
+/* --- 1. Variables & Global Reset --- */
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --font-main: 'Inter', system-ui, sans-serif;
+  --bg-deep: #0f0f0f;
+  --bg-mid: #1a1a1a;
+  --bg-light: #242424;
+  --bg-card: #2a2a2a;
+
+  --text-primary: rgba(255, 255, 255, 0.87);
+  --text-dim: #888;
+  --accent: #646cff;
+  --accent-glow: #818cf8;
+
+  --border-dim: #333;
+  --border-mid: #444;
+
+  /* Badge Colors */
+  --clr-array: #1e3a8a;
+  --clr-array-txt: #93c5fd;
+  --clr-obj: #451a03;
+  --clr-obj-txt: #fdba74;
+  --clr-num: #4c1d95;
+  --clr-num-txt: #c4b5fd;
+  --clr-str: #064e3b;
+  --clr-str-txt: #6ee7b7;
+  --clr-bool: #7f1d1d;
+  --clr-bool-txt: #fca5a5;
+  --clr-null: #374151;
+  --clr-null-txt: #9ca3af;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body,
@@ -13,234 +38,297 @@ body,
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 100vh;
-  /* Full Viewport Height */
-  overflow: hidden;
-  /* Prevent body scroll */
+  font-family: var(--font-main);
+  background-color: var(--bg-light);
+  color: var(--text-primary);
+  /* Removed overflow:hidden from here so Portfolio can scroll */
 }
 
-/* Main Layout Container */
+/* --- 2. Portfolio Layout (Sticky Footer Fix) --- */
+.portfolio-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg-deep);
+}
+
+.portfolio-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 10%;
+  background: rgba(15, 15, 15, 0.8);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* This is the key to the sticky footer */
+.portfolio-content {
+  flex: 1;
+}
+
+.portfolio-footer {
+  text-align: center;
+  padding: 3rem;
+  border-top: 1px solid var(--border-dim);
+  color: var(--text-dim);
+}
+
+/* --- 3. JSON Tool Layout (Collision Fix) --- */
 .app-container {
   display: flex;
-  /* Creates the two columns */
   height: 100vh;
+  /* Fixed height for the tool */
   width: 100%;
+  overflow: hidden;
+  /* Only the tool prevents body scroll */
 }
 
-/* --- Left Column (Input) --- */
 .input-pane {
   flex: 0 0 40%;
-  /* Fixed 40% width */
   display: flex;
   flex-direction: column;
-  padding: 2rem;
-  border-right: 1px solid #333;
-  background-color: #1a1a1a;
-  box-sizing: border-box;
+  /* 4.5rem top padding ensures 'JSON X-RAY' title never hits 'HOME' button */
+  padding: 4.5rem 2rem 2rem 2rem;
+  border-right: 1px solid var(--border-dim);
+  background-color: var(--bg-mid);
+  position: relative;
 }
 
-.app-title {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  text-align: left;
-}
-
-.json-textarea {
-  flex: 1;
-  /* Grows to fill available vertical space */
-  width: 100%;
-  padding: 15px;
-  font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
-  font-size: 14px;
-  background-color: #0f0f0f;
-  color: #e5e5e5;
-  border: 1px solid #444;
-  border-radius: 8px;
-  resize: none;
-  /* User shouldn't resize manually */
-  box-sizing: border-box;
-}
-
-.button-group {
-  margin-top: 1rem;
-  display: flex;
-  gap: 10px;
-}
-
-.error-box {
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #450a0a;
-  color: #fca5a5;
-  border: 1px solid #7f1d1d;
+.home-button {
+  position: absolute;
+  top: 1.2rem;
+  left: 1.5rem;
+  z-index: 110;
+  padding: 8px 16px;
+  background: var(--bg-deep);
+  border: 1px solid var(--accent);
   border-radius: 6px;
-  font-size: 0.9rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: 0.2s;
 }
 
-/* --- Right Column (Output) --- */
+.home-button:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
 .output-pane {
   flex: 1;
-  /* Takes remaining 60% width */
   padding: 2rem;
   overflow-y: auto;
-  /* Internal scroll only for this side */
-  background-color: #242424;
-  box-sizing: border-box;
-}
-
-.placeholder-text {
-  color: #555;
-  margin-top: 20%;
-  font-style: italic;
-}
-
-.results-header {
+  background-color: var(--bg-light);
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #444;
+  flex-direction: column;
 }
 
-.results-grid {
-  display: grid;
-  /* Auto-fit columns */
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 12px;
+/* --- 4. Elements & Badges --- */
+.json-textarea {
+  flex: 1;
+  width: 100%;
+  padding: 15px;
+  font-family: 'Menlo', monospace;
+  font-size: 14px;
+  background-color: var(--bg-deep);
+  color: #e5e5e5;
+  border: 1px solid var(--border-mid);
+  border-radius: 8px;
+  resize: none;
 }
 
 .result-card {
-  padding: 12px;
-  background-color: #2a2a2a;
-  border-radius: 8px;
-  border: 1px solid #333;
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: 10px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 8px;
-  transition: transform 0.1s ease;
-}
-
-.result-card:hover {
-  border-color: #555;
-  transform: translateY(-2px);
-}
-
-.result-key {
-  font-weight: 600;
-  color: #fff;
-  word-break: break-all;
-  font-size: 0.9rem;
-}
-
-/* Badges */
-.type-badge {
-  align-self: flex-start;
-  font-size: 0.7rem;
-  padding: 3px 8px;
-  border-radius: 4px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-/* Colors */
-.badge-array {
-  background: #1e3a8a;
-  color: #93c5fd;
-}
-
-/* Blue */
-.badge-object {
-  background: #451a03;
-  color: #fdba74;
-}
-
-/* Orange */
-.badge-number {
-  background: #4c1d95;
-  color: #c4b5fd;
-}
-
-/* Purple */
-.badge-string {
-  background: #064e3b;
-  color: #6ee7b7;
-}
-
-/* Green */
-.badge-boolean {
-  background: #7f1d1d;
-  color: #fca5a5;
-}
-
-/* Red */
-.badge-null {
-  background: #374151;
-  color: #9ca3af;
-}
-
-/* Grey */
-.badge-default {
-  background: #374151;
-  color: #9ca3af;
-}
-
-/* Breadcrumbs */
-.breadcrumb-bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  margin-bottom: 20px;
-  padding: 10px;
-  background-color: #1a1a1a;
-  border-radius: 6px;
-  font-family: monospace;
-  font-size: 0.9rem;
-}
-
-.breadcrumb-item {
-  display: flex;
-  align-items: center;
-}
-
-.breadcrumb-link {
-  color: #646cff;
-  cursor: pointer;
-  padding: 2px 5px;
-  border-radius: 4px;
-}
-
-.breadcrumb-link:hover {
-  background-color: #2a2a2a;
-  text-decoration: underline;
-}
-
-.breadcrumb-separator {
-  margin: 0 5px;
-  color: #666;
-}
-
-/* Clickable Cards */
-.result-card {
-  /* ... keep existing styles ... */
-  transition: all 0.2s ease; /* Smooth hover */
+  min-height: 100px;
+  /* Ensures all cards have the same height */
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .result-card.clickable {
   cursor: pointer;
-  border-color: #646cff; /* Subtle hint color */
+  border-color: var(--accent);
 }
 
 .result-card.clickable:hover {
-  background-color: #2a2a2a;
-  transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  border-color: #818cf8;
+  transform: translateY(-4px);
+  background: #333;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  border-color: var(--accent-glow);
 }
 
-/* Dim non-clickable cards slightly */
-.result-card:not(.clickable) {
-  opacity: 0.8;
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.result-key {
+  font-weight: 600;
+  font-family: 'Menlo', monospace;
+  font-size: 0.95rem;
+  color: #fff;
+  word-break: break-all;
+}
+
+.expand-icon {
+  color: var(--accent);
+  font-size: 10px;
+}
+
+.card-bottom {
+  display: flex;
+  align-items: center;
+}
+
+.type-badge {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badge-array {
+  background: var(--clr-array);
+  color: var(--clr-array-txt);
+}
+
+.badge-object {
+  background: var(--clr-obj);
+  color: var(--clr-obj-txt);
+}
+
+.badge-number {
+  background: var(--clr-num);
+  color: var(--clr-num-txt);
+}
+
+.badge-string {
+  background: var(--clr-str);
+  color: var(--clr-str-txt);
+}
+
+.badge-boolean {
+  background: var(--clr-bool);
+  color: var(--clr-bool-txt);
+}
+
+.badge-null,
+.badge-default {
+  background: var(--clr-null);
+  color: var(--clr-null-txt);
+}
+
+/* --- 5. Portfolio Hero & Projects --- */
+.hero-section {
+  padding: 8rem 10% 4rem;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: 4.5rem;
+  line-height: 1.1;
+  margin: 0 0 1.5rem;
+  font-weight: 800;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 3rem;
+  font-size: 2.5rem;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 0 10% 4rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-content {
+  animation: fadeIn 0.8s ease-out;
+}
+
+/* --- Interactive Breadcrumbs --- */
+.breadcrumb-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2rem;
+  padding: 8px 12px;
+  background: var(--bg-mid);
+  border-radius: 12px;
+  border: 1px solid var(--border-dim);
+  width: fit-content;
+  /* Keeps the bar snug around the links */
+}
+
+.breadcrumb-pill-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.breadcrumb-pill {
+  all: unset;
+  /* Resets default button styles */
+  cursor: pointer;
+  padding: 4px 12px;
+  background: transparent;
+  color: var(--text-dim);
+  font-family: 'Menlo', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+/* Hover effect: Makes it clear it's an action */
+.breadcrumb-pill:hover {
+  background: rgba(100, 108, 255, 0.1);
+  /* Subtle accent tint */
+  color: var(--accent);
+  border-color: rgba(100, 108, 255, 0.3);
+}
+
+/* Style for the 'Root' or first item to make it stand out */
+.breadcrumb-pill-wrapper:first-child .breadcrumb-pill {
+  color: var(--accent-glow);
+}
+
+/* The arrow separator */
+.breadcrumb-arrow {
+  display: flex;
+  align-items: center;
+  color: #444;
+  /* Dim color so the links pop more */
+}
+
+/* Animation for clicking */
+.breadcrumb-pill:active {
+  transform: scale(0.95);
 }

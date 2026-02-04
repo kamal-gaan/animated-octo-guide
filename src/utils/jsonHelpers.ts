@@ -1,7 +1,7 @@
 // src/utils/jsonHelpers.ts
 import type { Summary } from '../types';
 
-export const getTypeClass = (typeString: string) => {
+export const getTypeClass = (typeString: string): string => {
   if (typeString.includes('Array')) return 'badge-array';
   if (typeString === 'Object') return 'badge-object';
   if (typeString === 'number') return 'badge-number';
@@ -14,49 +14,41 @@ export const getTypeClass = (typeString: string) => {
 export const generateOverview = (data: unknown): Summary => {
   if (data === null) return { type: 'null', count: 0, preview: [] };
 
-  if (Array.isArray(data)) {
-    const preview = data.map((item, index) => {
-      let valueType: string = typeof item;
-      let isExpandable = false;
+  // Safety check: only process if it's an object or array
+  const keys = (typeof data === 'object') ? Object.keys(data as object) : [];
 
-      if (Array.isArray(item)) {
-        valueType = `Array (${item.length})`;
-        isExpandable = item.length > 0;
-      } else if (item === null) {
-        valueType = 'null';
-      } else if (typeof item === 'object') {
-        valueType = 'Object';
-        isExpandable = Object.keys(item as object).length > 0;
-      }
-      
-      return { key: index.toString(), type: valueType, isExpandable };
-    });
+  const preview = keys.map((key) => {
+    const rawValue = (data as Record<string, unknown>)[key];
+    let valueType: string = typeof rawValue;
+    let isExpandable = false;
+    let displayValue = "";
 
-    return { type: 'Array', count: data.length, preview };
-  }
+    if (Array.isArray(rawValue)) {
+      valueType = `Array (${rawValue.length})`;
+      isExpandable = rawValue.length > 0;
+    } else if (rawValue === null) {
+      valueType = 'null';
+      displayValue = "null";
+    } else if (valueType === 'object') {
+      valueType = 'Object';
+      isExpandable = Object.keys(rawValue as object).length > 0;
+    } else {
+      // Primitive handling
+      displayValue = String(rawValue);
+      if (displayValue.length > 40) displayValue = displayValue.substring(0, 37) + "...";
+    }
 
-  if (typeof data === 'object') {
-    const keys = Object.keys(data as object);
-    const preview = keys.map((key) => {
-      const value = (data as Record<string, unknown>)[key];
-      let valueType: string = typeof value;
-      let isExpandable = false;
-      
-      if (Array.isArray(value)) {
-        valueType = `Array (${value.length})`;
-        isExpandable = value.length > 0;
-      } else if (value === null) {
-        valueType = 'null';
-      } else if (valueType === 'object') {
-        valueType = 'Object';
-        isExpandable = Object.keys(value as object).length > 0;
-      }
-      
-      return { key, type: valueType, isExpandable };
-    });
+    return { 
+      key, 
+      type: valueType, 
+      isExpandable, 
+      value: displayValue 
+    };
+  });
 
-    return { type: 'Object', count: keys.length, preview };
-  }
-
-  return { type: typeof data, count: 1, preview: [] };
+  return {
+    type: Array.isArray(data) ? 'Array' : 'Object',
+    count: keys.length,
+    preview
+  };
 };
