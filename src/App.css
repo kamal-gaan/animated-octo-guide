@@ -41,10 +41,9 @@ body,
   font-family: var(--font-main);
   background-color: var(--bg-light);
   color: var(--text-primary);
-  /* Removed overflow:hidden from here so Portfolio can scroll */
 }
 
-/* --- 2. Portfolio Layout (Sticky Footer Fix) --- */
+/* --- 2. Portfolio Layout --- */
 .portfolio-container {
   display: flex;
   flex-direction: column;
@@ -64,7 +63,6 @@ body,
   z-index: 1000;
 }
 
-/* This is the key to the sticky footer */
 .portfolio-content {
   flex: 1;
 }
@@ -76,21 +74,18 @@ body,
   color: var(--text-dim);
 }
 
-/* --- 3. JSON Tool Layout (Collision Fix) --- */
+/* --- 3. JSON Tool Layout --- */
 .app-container {
   display: flex;
   height: 100vh;
-  /* Fixed height for the tool */
   width: 100%;
   overflow: hidden;
-  /* Only the tool prevents body scroll */
 }
 
 .input-pane {
   flex: 0 0 40%;
   display: flex;
   flex-direction: column;
-  /* 4.5rem top padding ensures 'JSON X-RAY' title never hits 'HOME' button */
   padding: 4.5rem 2rem 2rem 2rem;
   border-right: 1px solid var(--border-dim);
   background-color: var(--bg-mid);
@@ -127,38 +122,33 @@ body,
   flex-direction: column;
 }
 
-/* --- 4. Elements & Badges --- */
-.json-textarea {
-  flex: 1;
-  width: 100%;
-  padding: 15px;
-  font-family: 'Menlo', monospace;
-  font-size: 14px;
-  background-color: var(--bg-deep);
-  color: #e5e5e5;
-  border: 1px solid var(--border-mid);
-  border-radius: 8px;
-  resize: none;
-}
+/* --- 4. THE GRID ENGINE --- */
+.results-grid {
+  display: grid;
+  /* Adjust minmax(220px) to control how many cards per row */
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  align-content: start;
+  padding-bottom: 2rem;
+} 
 
 .result-card {
   background: var(--bg-card);
   border: 1px solid var(--border-dim);
   border-radius: 10px;
   padding: 16px;
+  margin: 14px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 100px;
-  /* Ensures all cards have the same height */
+  min-height: 110px;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Use the margin you liked for extra spacing control */
+  margin: 10px;
 }
 
 .result-card.clickable {
   cursor: pointer;
   border-color: var(--accent);
-  padding: 16px;
-  margin: 14px;
 }
 
 .result-card.clickable:hover {
@@ -168,7 +158,6 @@ body,
   border-color: var(--accent-glow);
 }
 
-
 .result-key {
   font-weight: 600;
   font-family: 'Menlo', monospace;
@@ -177,21 +166,34 @@ body,
   word-break: break-all;
 }
 
-.card-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 12px;
-}
-
-.expand-icon {
-  color: var(--accent);
-  font-size: 10px;
-}
-
-.card-bottom {
+/* --- 5. Navigation & Elements --- */
+.breadcrumb-bar {
   display: flex;
   align-items: center;
+  gap: 8px;
+  margin-bottom: 2rem;
+  padding: 8px 12px;
+  background: var(--bg-mid);
+  border-radius: 12px;
+  border: 1px solid var(--border-dim);
+  width: fit-content;
+}
+
+.breadcrumb-pill {
+  all: unset;
+  cursor: pointer;
+  padding: 4px 12px;
+  color: var(--text-dim);
+  font-family: 'Menlo', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.breadcrumb-pill:hover {
+  background: rgba(100, 108, 255, 0.1);
+  color: var(--accent);
 }
 
 .type-badge {
@@ -212,14 +214,14 @@ body,
   color: var(--clr-obj-txt);
 }
 
-.badge-number {
-  background: var(--clr-num);
-  color: var(--clr-num-txt);
-}
-
 .badge-string {
   background: var(--clr-str);
   color: var(--clr-str-txt);
+}
+
+.badge-number {
+  background: var(--clr-num);
+  color: var(--clr-num-txt);
 }
 
 .badge-boolean {
@@ -227,111 +229,22 @@ body,
   color: var(--clr-bool-txt);
 }
 
-.badge-null,
-.badge-default {
+.badge-null {
   background: var(--clr-null);
   color: var(--clr-null-txt);
 }
-
-/* --- 5. Portfolio Hero & Projects --- */
-.hero-section {
-  padding: 8rem 10% 4rem;
-  text-align: center;
-}
-
-.hero-title {
-  font-size: 4.5rem;
-  line-height: 1.1;
-  margin: 0 0 1.5rem;
-  font-weight: 800;
-}
-
-.section-title {
-  text-align: center;
-  margin-bottom: 3rem;
-  font-size: 2.5rem;
-}
-
-.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  padding: 0 10% 4rem;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.hero-content {
-  animation: fadeIn 0.8s ease-out;
-}
-
-/* --- Interactive Breadcrumbs --- */
-.breadcrumb-bar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 2rem;
-  padding: 8px 12px;
-  background: var(--bg-mid);
-  border-radius: 12px;
-  border: 1px solid var(--border-dim);
-  width: fit-content;
-  /* Keeps the bar snug around the links */
-}
-
-.breadcrumb-pill-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.breadcrumb-pill {
-  all: unset;
-  /* Resets default button styles */
-  cursor: pointer;
-  padding: 4px 12px;
-  background: transparent;
-  color: var(--text-dim);
+.json-textarea {
+  flex: 1;           /* Keeps the grow logic */
+  height: 0;         /* Forces the base height to 0 so flex-grow does the work */
+  min-height: 0;     /* Prevents the browser from enforcing a default height */
+  width: 100%;
+  padding: 15px;
   font-family: 'Menlo', monospace;
-  font-size: 0.85rem;
-  font-weight: 600;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-  border: 1px solid transparent;
-}
-
-/* Hover effect: Makes it clear it's an action */
-.breadcrumb-pill:hover {
-  background: rgba(100, 108, 255, 0.1);
-  /* Subtle accent tint */
-  color: var(--accent);
-  border-color: rgba(100, 108, 255, 0.3);
-}
-
-/* Style for the 'Root' or first item to make it stand out */
-.breadcrumb-pill-wrapper:first-child .breadcrumb-pill {
-  color: var(--accent-glow);
-}
-
-/* The arrow separator */
-.breadcrumb-arrow {
-  display: flex;
-  align-items: center;
-  color: #444;
-  /* Dim color so the links pop more */
-}
-
-/* Animation for clicking */
-.breadcrumb-pill:active {
-  transform: scale(0.95);
+  font-size: 14px;
+  background-color: var(--bg-deep);
+  color: #e5e5e5;
+  border: 1px solid var(--border-mid);
+  border-radius: 8px;
+  resize: none;
+  outline: none;
 }
