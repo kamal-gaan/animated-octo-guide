@@ -1,0 +1,246 @@
+/* Reset root to fill screen */
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+}
+
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  /* Full Viewport Height */
+  overflow: hidden;
+  /* Prevent body scroll */
+}
+
+/* Main Layout Container */
+.app-container {
+  display: flex;
+  /* Creates the two columns */
+  height: 100vh;
+  width: 100%;
+}
+
+/* --- Left Column (Input) --- */
+.input-pane {
+  flex: 0 0 40%;
+  /* Fixed 40% width */
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  border-right: 1px solid #333;
+  background-color: #1a1a1a;
+  box-sizing: border-box;
+}
+
+.app-title {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.json-textarea {
+  flex: 1;
+  /* Grows to fill available vertical space */
+  width: 100%;
+  padding: 15px;
+  font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+  background-color: #0f0f0f;
+  color: #e5e5e5;
+  border: 1px solid #444;
+  border-radius: 8px;
+  resize: none;
+  /* User shouldn't resize manually */
+  box-sizing: border-box;
+}
+
+.button-group {
+  margin-top: 1rem;
+  display: flex;
+  gap: 10px;
+}
+
+.error-box {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #450a0a;
+  color: #fca5a5;
+  border: 1px solid #7f1d1d;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+/* --- Right Column (Output) --- */
+.output-pane {
+  flex: 1;
+  /* Takes remaining 60% width */
+  padding: 2rem;
+  overflow-y: auto;
+  /* Internal scroll only for this side */
+  background-color: #242424;
+  box-sizing: border-box;
+}
+
+.placeholder-text {
+  color: #555;
+  margin-top: 20%;
+  font-style: italic;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #444;
+}
+
+.results-grid {
+  display: grid;
+  /* Auto-fit columns */
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.result-card {
+  padding: 12px;
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  border: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  transition: transform 0.1s ease;
+}
+
+.result-card:hover {
+  border-color: #555;
+  transform: translateY(-2px);
+}
+
+.result-key {
+  font-weight: 600;
+  color: #fff;
+  word-break: break-all;
+  font-size: 0.9rem;
+}
+
+/* Badges */
+.type-badge {
+  align-self: flex-start;
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Colors */
+.badge-array {
+  background: #1e3a8a;
+  color: #93c5fd;
+}
+
+/* Blue */
+.badge-object {
+  background: #451a03;
+  color: #fdba74;
+}
+
+/* Orange */
+.badge-number {
+  background: #4c1d95;
+  color: #c4b5fd;
+}
+
+/* Purple */
+.badge-string {
+  background: #064e3b;
+  color: #6ee7b7;
+}
+
+/* Green */
+.badge-boolean {
+  background: #7f1d1d;
+  color: #fca5a5;
+}
+
+/* Red */
+.badge-null {
+  background: #374151;
+  color: #9ca3af;
+}
+
+/* Grey */
+.badge-default {
+  background: #374151;
+  color: #9ca3af;
+}
+
+/* Breadcrumbs */
+.breadcrumb-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #1a1a1a;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 0.9rem;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-link {
+  color: #646cff;
+  cursor: pointer;
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+
+.breadcrumb-link:hover {
+  background-color: #2a2a2a;
+  text-decoration: underline;
+}
+
+.breadcrumb-separator {
+  margin: 0 5px;
+  color: #666;
+}
+
+/* Clickable Cards */
+.result-card {
+  /* ... keep existing styles ... */
+  transition: all 0.2s ease; /* Smooth hover */
+}
+
+.result-card.clickable {
+  cursor: pointer;
+  border-color: #646cff; /* Subtle hint color */
+}
+
+.result-card.clickable:hover {
+  background-color: #2a2a2a;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border-color: #818cf8;
+}
+
+/* Dim non-clickable cards slightly */
+.result-card:not(.clickable) {
+  opacity: 0.8;
+}
