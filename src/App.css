@@ -157,6 +157,8 @@ body,
 .result-card.clickable {
   cursor: pointer;
   border-color: var(--accent);
+  padding: 16px;
+  margin: 14px;
 }
 
 .result-card.clickable:hover {
@@ -166,12 +168,6 @@ body,
   border-color: var(--accent-glow);
 }
 
-.card-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 12px;
-}
 
 .result-key {
   font-weight: 600;
@@ -179,6 +175,13 @@ body,
   font-size: 0.95rem;
   color: #fff;
   word-break: break-all;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
 }
 
 .expand-icon {
